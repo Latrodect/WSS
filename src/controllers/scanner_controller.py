@@ -1,5 +1,5 @@
-from models.scanner_model import LocalScanner
-from serpant.logger import Logger
+from src.models.scanner_model import LocalScanner
+from src.logger import Logger
 
 class ScannerController:
     """

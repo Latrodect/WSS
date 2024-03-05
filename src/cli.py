@@ -1,5 +1,5 @@
 import argparse
-from controllers.scanner_controller import ScannerController
+from src.controllers.scanner_controller import ScannerController
 from termcolor import cprint
 
 class CommandLineInterface:

@@ -1,6 +1,6 @@
 import os
 import json
-from logger import Logger
+from src.logger import Logger
 
 class LocalScanner:
     """
