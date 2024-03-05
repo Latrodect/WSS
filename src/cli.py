@@ -31,20 +31,23 @@ class CommandLineInterface:
         jwt_token="123"
         banner = """
 
-  ██████ ▓█████  ██▀███   ██▓███   ▄▄▄       ███▄    █ ▄▄▄█████▓
-▒██    ▒ ▓█   ▀ ▓██ ▒ ██▒▓██░  ██▒▒████▄     ██ ▀█   █ ▓  ██▒ ▓▒
-░ ▓██▄   ▒███   ▓██ ░▄█ ▒▓██░ ██▓▒▒██  ▀█▄  ▓██  ▀█ ██▒▒ ▓██░ ▒░
-  ▒   ██▒▒▓█  ▄ ▒██▀▀█▄  ▒██▄█▓▒ ▒░██▄▄▄▄██ ▓██▒  ▐▌██▒░ ▓██▓ ░ 
-▒██████▒▒░▒████▒░██▓ ▒██▒▒██▒ ░  ░ ▓█   ▓██▒▒██░   ▓██░  ▒██▒ ░ 
-▒ ▒▓▒ ▒ ░░░ ▒░ ░░ ▒▓ ░▒▓░▒▓▒░ ░  ░ ▒▒   ▓▒█░░ ▒░   ▒ ▒   ▒ ░░   
-░ ░▒  ░ ░ ░ ░  ░  ░▒ ░ ▒░░▒ ░       ▒   ▒▒ ░░ ░░   ░ ▒░    ░    
-░  ░  ░     ░     ░░   ░ ░░         ░   ▒      ░   ░ ░   ░      
-      ░     ░  ░   ░                    ░  ░         ░          
-                                                                
+
+      ___           ___           ___           ___           ___           ___           ___     
+     /\  \         /\  \         /\  \         /\  \         /\  \         /\__\         /\  \    
+    /::\  \       /::\  \       /::\  \       /::\  \       /::\  \       /::|  |        \:\  \   
+   /:/\ \  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:|:|  |         \:\  \  
+  _\:\~\ \  \   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \   /:/|:|  |__       /::\  \ 
+ /\ \:\ \ \__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/ |:| /\__\     /:/\:\__\\
+ \:\ \:\ \/__/ \:\~\:\ \/__/ \/_|::\/:/  / \/__\:\/:/  / \/__\:\/:/  / \/__|:|/:/  /    /:/  \/__/
+  \:\ \:\__\    \:\ \:\__\      |:|::/  /       \::/  /       \::/  /      |:/:/  /    /:/  /     
+   \:\/:/  /     \:\ \/__/      |:|\/__/         \/__/        /:/  /       |::/  /     \/__/      
+    \::/  /       \:\__\        |:|  |                       /:/  /        /:/  /                 
+     \/__/         \/__/         \|__|                       \/__/         \/__/                  
+
 
 World Serpant Search is CLI Tools for Vulnerability Detection                                 
         """
-        cprint(banner, "red")
+        cprint(banner, "light_magenta")
 
     def run(self):
         """
@@ -53,18 +56,23 @@ World Serpant Search is CLI Tools for Vulnerability Detection
         parser = argparse.ArgumentParser(description="World Serpant Search CLI: Scan directories for vulnerabilities.")
         subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
-        lscan_parser = subparsers.add_parser("localscan", help="Scan a local directory for vulnerabilities")
+        lscan_parser = subparsers.add_parser("scan", help="Scan a local directory for vulnerabilities")
         lscan_parser.add_argument('directory', help="Path to the directory to be scanned.")
 
+        xss_parser = subparsers.add_parser("xss", help="Scan a local directory for XSS vulnerabilities")
+        xss_parser.add_argument('directory', help="Path to the directory to be scanned.")
+
         args = parser.parse_args()
-        if args.command == "localscan":
+        if args.command == "scan":
             self.controller.scan_local_directory(args.directory)
+        elif args.command == "xss":
+            self.controller.scan_xss_directory(args.directory)
         else:
             print("Invalid command. Use 'serpant -h' for help.")
 
 def main():
     """
-    Entry point of the CLI application. private_key
+    Entry point of the CLI application.
     """
     cli = CommandLineInterface()
     cli.run()
