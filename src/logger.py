@@ -6,7 +6,7 @@ class Logger:
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             
-            cls._instance = super(Logger, cls).__mew__(cls, *args, **kwargs)
+            cls._instance = super(Logger, cls).__new__(cls, *args, **kwargs)
             cls._instance._setup_logger()
         return cls._instance
     
