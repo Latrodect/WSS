@@ -11,6 +11,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'termcolor',
+        'colorlog'
     ],
     entry_points={
         'console_scripts': [

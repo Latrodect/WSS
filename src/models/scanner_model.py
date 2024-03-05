@@ -43,15 +43,24 @@ class LocalScanner:
         found_vulnerabilities = []
 
         vulnerabilities = self._load_vulnerabilities()
-
+        
         for root, _, files in os.walk(directory_path):
             for file_name in files:
                 file_path = os.path.join(root, file_name)
-                with open(file_path, 'r', encoding="utf-8") as file:
-                    for line_number, line in enumerate(file, start=1):
-                        for vulnerability in vulnerabilities:
-                            if vulnerability["vulnerabilities"].lower() in line.lower():
-                                found_vulnerabilities.append(f"{vulnerability['msg']} found in file '{file_path}' at line {line_number}")
+                try:
+                    with open(file_path, 'r', encoding="utf-8") as file:
+                        for line_number, line in enumerate(file, start=1):
+                            for vulnerability_entry in vulnerabilities:
+                                for vulnerability in vulnerability_entry["vulnerabilities"]:
+                                    if vulnerability.lower() in line.lower():
+                                        found_vulnerabilities.append(f"{vulnerability_entry['msg']} found in file '{file_path}' at line {line_number}")
+                except UnicodeDecodeError:
+                    with open(file_path, 'r', encoding="latin-1") as file:
+                        for line_number, line in enumerate(file, start=1):
+                            for vulnerability_entry in vulnerabilities:
+                                for vulnerability in vulnerability_entry["vulnerabilities"]:
+                                    if vulnerability.lower() in line.lower():
+                                        found_vulnerabilities.append(f"{vulnerability_entry['msg']} found in file '{file_path}' at line {line_number}")
 
         if found_vulnerabilities:
             self.logger.log_warning("Vulnerabilities found:")
