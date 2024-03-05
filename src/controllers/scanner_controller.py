@@ -1,4 +1,4 @@
-import re
+from src.views.scanner_view import ScannerView
 from src.models.scanner_model import LocalScanner
 from src.logger import Logger
 class ScannerController:
@@ -16,6 +16,7 @@ class ScannerController:
         """
         self.logger = Logger()
         self.scanner = LocalScanner()
+        self.view = ScannerView()
 
     def scan_local_directory(self, directory_path: str) -> None:
         """
@@ -29,10 +30,7 @@ class ScannerController:
         """
         self.logger.log_info(f"Starting local directory scan: {directory_path}")
         vulnerabilities = self.scanner.scan_directory(directory_path)
-        if vulnerabilities:
-            self.logger.log_warning("Vulnerabilities found during local scan.")
-        else:
-            self.logger.log_info("No vulnerabilities found in the local directory.")
+        self.view.display_scan_results(vulnerabilities)
 
     def scan_xss_directory(self, directory_path: str) -> None:
         """
@@ -48,8 +46,21 @@ class ScannerController:
         """
         self.logger.log_info(f"Starting XSS scan in directory: {directory_path}")
         vulnerabilities = self.scanner.scan_xss(directory_path)
-        if vulnerabilities:
-            self.logger.log_warning("Potential XSS vulnerabilities found:")
-            self.view.display_scan_results(vulnerabilities)
-        else:
-            self.logger.log_info("No potential XSS vulnerabilities found.")
+        self.view.display_xss_vulnerabilities(vulnerabilities)
+
+    def scan_authentication_bypass_directory(self, directory_path: str) -> None:
+        """
+        Scan a directory for authentication bypass vulnerabilities.
+
+        This method scans the specified directory for authentication bypass vulnerabilities using the authentication bypass scanner.
+        It then displays the results of the scan using the view's display_scan_results method.
+
+        Args:
+            directory_path (str): The path to the directory to be scanned.
+
+        Returns:
+            None
+        """
+        self.logger.log_info(f"Starting Authenticaiton Bypass scan in directory: {directory_path}")
+        vulnerabilities = self.scanner.scan_authentication_bypass_directory(directory_path)
+        self.view.display_authentication_bypass_scan_results(vulnerabilities)

@@ -44,3 +44,22 @@ class ScannerView:
                 self.logger.log_warning("-" + vulnerability)
         else:
             self.logger.log_info("No potential XSS vulnerabilities found.")
+    
+    def display_authentication_bypass_scan_results(self, vulnerabilities: list) -> None:
+        """
+        Display the results of the authentication bypass scan.
+
+        This method takes a list of vulnerabilities found during the authentication bypass scan and prints them to the console.
+
+        Args:
+            vulnerabilities (list): A list of strings representing the vulnerabilities found during the scan.
+
+        Returns:
+            None
+        """
+        if vulnerabilities:
+            self.logger.log_warning("Potential authentication bypass vulnerabilities found:")
+            for vulnerability in vulnerabilities:
+                self.logger.log_warning("-" + vulnerability)
+        else:
+            self.logger.log_info("No potential authentication bypass vulnerabilities found.")
