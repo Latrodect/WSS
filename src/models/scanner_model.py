@@ -1,5 +1,6 @@
 import os
 import json
+import re
 from src.logger import Logger
 
 class LocalScanner:
@@ -15,7 +16,7 @@ class LocalScanner:
         Initializes the LocalScanner object.
         """
         self.logger = Logger()
-
+    
     def _load_vulnerabilities(self, custom_json_file=None) -> list:
         """
         Loads vulnerability patterns from a JSON file.
@@ -68,3 +69,35 @@ class LocalScanner:
                 self.logger.log_warning("-" + vulnerability)
         else:
             self.logger.log_info("No vulnerabilities found.")
+
+    def scan_xss(self, directory_path:str) -> list:
+        """
+        Scan a file for potential Cross-Site Scripting (XSS) vulnerabilities.
+
+        Args:
+            directory_path (str): The path to the file to be scanned.
+
+        Returns:
+            list: A list of potential XSS vulnerabilities found in the file.
+        """
+        xss_vulnerabilities = []
+        xss_pattern = re.compile(r'<\s*script[^>]*>.*?<\s*/\s*script\s*>', re.IGNORECASE)
+        
+        try:
+            for root, _, files in os.walk(directory_path):
+                for file_name in files:
+                    # This ignore will apply to all scan logics.
+                    if not file_name.endswith(('.pyc')):
+                        file_path = os.path.join(root, file_name)
+                        with open(file_path, 'r', encoding='utf-8') as file:
+                            for line_number, line in enumerate(file, start=1):
+                                if xss_pattern.search(line):
+                                    xss_vulnerabilities.append(f"Potential XSS vulnerability found in file '{file_path}' at line {line_number}")
+        except UnicodeDecodeError as e:
+            self.logger.log_error(f"Error decoding file '{directory_path}': {e}")
+        except FileNotFoundError:
+            self.logger.log_error(f"File not found: '{directory_path}'")
+        except Exception as e:
+            self.logger.log_error(f"Error processing file '{directory_path}': {e}")
+        
+        return xss_vulnerabilities

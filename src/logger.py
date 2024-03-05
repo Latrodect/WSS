@@ -36,7 +36,7 @@ class Logger:
         self.logger.setLevel(logging.DEBUG)
 
         formatter = colorlog.ColoredFormatter(
-            '%(log_color)s%(asctime)s - %(levelname)s - %(message)s',
+            '%(log_color)s%(asctime)s - %(log_level)s - %(white)s%(message)s',
             datefmt='%Y-%m-%d %H:%M:%S',
             log_colors={
                 'DEBUG': 'purple',
@@ -44,6 +44,9 @@ class Logger:
                 'WARNING': 'yellow',
                 'ERROR': 'red',
                 'CRITICAL': 'red,bg_white',
+            },
+            secondary_log_colors={
+                'message': {'INFO': 'white'}
             }
         )
 
@@ -59,7 +62,7 @@ class Logger:
         Args:
             message (str): The message to be logged.
         """
-        self.logger.info(message)
+        self.logger.info(message, extra={'log_level': 'INFO'})
 
     def log_warning(self, message):
         """

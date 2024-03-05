@@ -30,3 +30,17 @@ class ScannerView:
                 self.logger.log_warning("-" + vulnerability)
         else:
             self.logger.log_info("No vulnerabilities found.")
+
+    def display_xss_vulnerabilities(self, vulnerabilities: list) -> None:
+        """
+        Display XSS vulnerabilities.
+
+        Args:
+            vulnerabilities (list): A list of XSS vulnerabilities.
+        """
+        if vulnerabilities:
+            self.logger.log_warning("Potential XSS vulnerabilities found:")
+            for vulnerability in vulnerabilities:
+                self.logger.log_warning("-" + vulnerability)
+        else:
+            self.logger.log_info("No potential XSS vulnerabilities found.")
