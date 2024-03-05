@@ -1,0 +1,51 @@
+[
+  { "msg": "Hardcoded password", "vulnerabilities": ["password"] },
+  {
+    "msg": "Sensitive API key",
+    "vulnerabilities": ["api_key", "api_secret", "oauth_token"]
+  },
+  {
+    "msg": "Exposed database credentials",
+    "vulnerabilities": ["username", "password", "database_password"]
+  },
+  { "msg": "Insecure SSH key", "vulnerabilities": ["ssh_key"] },
+  {
+    "msg": "Exposed AWS credentials",
+    "vulnerabilities": ["aws_access_key_id", "aws_secret_access_key"]
+  },
+  { "msg": "Unprotected private key", "vulnerabilities": ["private_key"] },
+  { "msg": "Exposed OAuth token", "vulnerabilities": ["oauth_token"] },
+  { "msg": "Unsecured API token", "vulnerabilities": ["api_token"] },
+  { "msg": "Hardcoded secret", "vulnerabilities": ["secret"] },
+  { "msg": "Exposed TLS certificate", "vulnerabilities": ["tls_certificate"] },
+  {
+    "msg": "Sensitive configuration",
+    "vulnerabilities": ["config", "configuration"]
+  },
+  {
+    "msg": "Exposed authentication credentials",
+    "vulnerabilities": ["auth_token", "authentication_token"]
+  },
+  { "msg": "Insecure FTP password", "vulnerabilities": ["ftp_password"] },
+  { "msg": "Unprotected JWT token", "vulnerabilities": ["jwt_token"] },
+  { "msg": "Exposed encryption key", "vulnerabilities": ["encryption_key"] },
+  { "msg": "Unsecured admin password", "vulnerabilities": ["admin_password"] },
+  {
+    "msg": "Exposed PII (Personally Identifiable Information)",
+    "vulnerabilities": ["pii"]
+  },
+  { "msg": "Unprotected session ID", "vulnerabilities": ["session_id"] },
+  { "msg": "Exposed access token", "vulnerabilities": ["access_token"] },
+  { "msg": "Insecure RSA key", "vulnerabilities": ["rsa_key"] },
+  { "msg": "Hardcoded API token", "vulnerabilities": ["api_token"] },
+  {
+    "msg": "Sensitive configuration file",
+    "vulnerabilities": ["config", "configuration"]
+  },
+  {
+    "msg": "Exposed user credentials",
+    "vulnerabilities": ["user", "password"]
+  },
+  { "msg": "Unprotected API key", "vulnerabilities": ["api_key"] },
+  { "msg": "Insecure encryption key", "vulnerabilities": ["encryption_key"] }
+]
