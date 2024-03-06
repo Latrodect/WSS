@@ -1,11 +1,10 @@
 # World Serpant Search
 
-![1709693527726](image/README/1709693527726.png)
+![Alt Text](https://raw.githubusercontent.com/Latrodect/wss-repo-vulnerability-search-manager/main/image/README/1709693527726.png)
 
 World Serpant Search is a CLI tool for vulnerability detection. It allows you to scan directories for various types of vulnerabilities, including XSS vulnerabilities, authentication bypass vulnerabilities, and package vulnerabilities using the National Vulnerability Database (NVD).
 
-![1709722154357](image/README/1709722154357.png)
-
+![Alt Text](https://raw.githubusercontent.com/Latrodect/wss-repo-vulnerability-search-manager/main/image/README/1709722154357.png)
 ## Installation
 
 To install World Serpant Search, you can use pip:
