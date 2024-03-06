@@ -281,7 +281,7 @@ class LocalScanner:
 
         return vulnerabilities
     
-    def scan_sensitive_files_exposure(self, directory_path):
+    def check_sensitive_files_exposure(self, directory_path):
         """
         Check for sensitive files (e.g., configuration files, log files) in the specified directory.
 
@@ -297,4 +297,52 @@ class LocalScanner:
         for pattern in sensitive_file_patterns:
             sensitive_file_patterns.extend(glob.glob(os.path.join(directory_path, pattern)))
         return sensitive_files
+    
+    
+    def detect_insecure_deserialization(self, directory_path):
+        """
+        Detect insecure deserialization vulnerabilities in the specified directory.
+
+        Args:
+            directory_path (str): Path to the directory to be scanned for insecure deserialization vulnerabilities.
+
+        Returns:
+            list: A list of insecure deserialization vulnerabilities found in the directory.
+        """
+        self.logger.log_info(f"Starting insecure deserialization detection for directory: {directory_path}")
+        insecure_deserialization_vulnerabilities  = []
+
+        for file_name in os.listdir(directory_path):
+            file_path = os.path.join(directory_path, file_name)
+            if self._is_insecure_deserialization(file_path):
+                insecure_deserialization_vulnerabilities.append(file_path)
+            
+        if insecure_deserialization_vulnerabilities:
+            self.logger.log_warning("Insecure deserialization vulnerabilities found:")
+            for vulnerability in insecure_deserialization_vulnerabilities:
+                self.logger.log_warning(f"- {vulnerability}")
+        else:
+            self.logger.log_info("No insecure deserialization vulnerabilities found.")
+        
+        return insecure_deserialization_vulnerabilities
+    
+    def _is_insecure_deserialization(self, file_path):
+        """
+        Check if a file contains indications of insecure deserialization.
+
+        Args:
+            file_path (str): Path to the file to be checked.
+
+        Returns:
+            bool: True if the file indicates insecure deserialization, False otherwise.
+        """
+        try:
+            with open(file_path, 'r') as file:
+                content = file.read()
+                if "serialize" in content and "unserialize" in content:
+                    return True
+        except Exception as e:
+            self.logger.log_error(f"Error processing file {file_path}: {str(e)}")
+
+        return False
 

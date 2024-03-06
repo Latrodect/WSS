@@ -97,3 +97,6 @@ class ScannerView:
                 print(file_path)
         else:
             print("No sensitive files exposed.")
+
+    def display_insecure_deserialization_vulnerabilities(self):
+        pass

@@ -80,7 +80,7 @@ class ScannerController:
         vulnerabilities = self.scanner.scan_package_vulnerabilities_nvd(package_name)
         self.view.display_package_vulnerabilities_nvd(vulnerabilities)
 
-    def scan_sensitive_files_exposure(self, directory_path):
+    def check_sensitive_files_exposure(self, directory_path):
         """
         Check for sensitive file exposure in the specified directory.
 
@@ -88,5 +88,16 @@ class ScannerController:
             directory_path (str): The path to the directory to be scanned.
         """
         self.logger.log_info(f"Starting sensitive files exposure check for directory: {directory_path}")
-        sensitive_files = self.scanner.scan_sensitive_files_exposure(directory_path)
+        sensitive_files = self.scanner.check_sensitive_files_exposure(directory_path)
         self.view.display_sensitive_files_exposure(sensitive_files)
+
+    def detect_insecure_deserialization(self,directory_path):
+        """
+        Detect insecure deserialization vulnerabilities in the codebase.
+
+        Args:
+            directory (str): Path to the directory to be scanned for insecure deserialization vulnerabilities.
+        """
+        self.logger.log_info(f"Starting sensitive files exposure check for directory: {directory_path}")
+        insecure_deserialization_vulnerabilities = self.model.detect_insecure_deserialization(directory_path)
+        self.view.display_insecure_deserialization_vulnerabilities(insecure_deserialization_vulnerabilities)
