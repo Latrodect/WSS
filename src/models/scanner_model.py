@@ -66,12 +66,7 @@ class LocalScanner:
                                     if vulnerability.lower() in line.lower():
                                         found_vulnerabilities.append(f"{vulnerability_entry['msg']} found in file '{file_path}' at line {line_number}")
 
-        if found_vulnerabilities:
-            self.logger.log_warning("Vulnerabilities found:")
-            for vulnerability in found_vulnerabilities:
-                self.logger.log_warning("-" + vulnerability)
-        else:
-            self.logger.log_info("No vulnerabilities found.")
+        return vulnerabilities
 
     def scan_xss(self, directory_path:str) -> list:
         """
@@ -171,34 +166,47 @@ class LocalScanner:
         ]
 
         try:
-            self.spinner.start()  
+            self.logger.log_info(f"Scanning directory: {directory_path}")
             for root, _, files in os.walk(directory_path):
                 for file_name in files:
-                    file_path = os.path.join(root, file_name)
-                    vulnerabilities += self.scan_file_for_bypass(file_path, bypass_patterns)
-        finally:
-            self.spinner.stop() 
+                    if not file_name.endswith('.pyc'):  # Skip .pyc files
+                        file_path = os.path.join(root, file_name)
+                        vulnerabilities += self.scan_file_for_bypass(file_path, bypass_patterns)
+        except Exception as e:
+            self.logger.log_error(f"Error scanning directory {directory_path}: {str(e)}")
 
         return vulnerabilities
-    
+
     def scan_file_for_bypass(self, file_path, bypass_patterns):
+        """
+        Scan a file for authentication bypass vulnerabilities using predefined patterns.
+
+        Args:
+            file_path (str): The path to the file to be scanned.
+            bypass_patterns (list): A list of regular expressions representing authentication bypass patterns.
+
+        Returns:
+            list: A list of dictionaries containing information about potential authentication bypass vulnerabilities
+                found in the file. Each dictionary contains the following keys:
+                - "file_path": The path to the file containing the vulnerability.
+                - "line_number": The line number where the vulnerability was found.
+                - "vulnerability": A description of the potential vulnerability.
+        """
         vulnerabilities = []
+
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
                 for line_number, line in enumerate(file, start=1):
                     for pattern in bypass_patterns:
                         if re.search(pattern, line):
-                            vulnerability_info = {
+                            vulnerabilities.append({
                                 "file_path": file_path,
                                 "line_number": line_number,
-                                "vulnerability": "Potential authentication bypass detected!"
-                            }
-                            vulnerabilities.append(vulnerability_info)
-        except (UnicodeDecodeError, FileNotFoundError) as e:
-            self.logger.log_error(f"Error reading file '{file_path}': {e}")
-
+                                "vulnerability": f"Potential authentication bypass pattern: {pattern}"
+                            })
+                            break
         except Exception as e:
-            self.logger.log_error(f"Error processing file '{file_path}': {e}")
+            self.logger.log_error(f"Error reading file '{file_path}': {str(e)}")
 
         return vulnerabilities
     

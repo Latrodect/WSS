@@ -45,24 +45,27 @@ class ScannerView:
         else:
             self.logger.log_info("No potential XSS vulnerabilities found.")
     
-    def display_authentication_bypass_scan_results(self, vulnerabilities: list) -> None:
+    def display_authentication_bypass_scan_results(self, vulnerabilities):
         """
-        Display the results of the authentication bypass scan.
-
-        This method takes a list of vulnerabilities found during the authentication bypass scan and prints them to the console.
+        Display the results of the authentication bypass vulnerability scan.
 
         Args:
-            vulnerabilities (list): A list of strings representing the vulnerabilities found during the scan.
-
-        Returns:
-            None
+            vulnerabilities (list): A list of dictionaries containing information about potential authentication
+                bypass vulnerabilities. Each dictionary contains the following keys:
+                - "file_path": The path to the file containing the vulnerability.
+                - "line_number": The line number where the vulnerability was found.
+                - "vulnerability": A description of the potential vulnerability.
         """
         if vulnerabilities:
             self.logger.log_warning("Potential authentication bypass vulnerabilities found:")
             for vulnerability in vulnerabilities:
-                self.logger.log_warning("-" + vulnerability)
+                file_path = vulnerability.get("file_path", "Unknown")
+                line_number = vulnerability.get("line_number", "Unknown")
+                vulnerability_description = vulnerability.get("vulnerability", "Unknown")
+                message = f"File: {file_path}, Line: {line_number}, Description: {vulnerability_description}"
+                self.logger.log_warning(message)
         else:
-            self.logger.log_info("No potential authentication bypass vulnerabilities found.")
+            self.logger.log_info("No authentication bypass vulnerabilities found.")
 
     def display_package_vulnerabilities_nvd(self, vulnerabilities: list) -> None:
         """
@@ -111,3 +114,20 @@ class ScannerView:
                 print(file_path)
         else:
             print("No insecure deserialization vulnerabilities found.")
+
+    def display_access_control_vulnerabilities(self, vulnerabilities):
+        """
+        Display information about access control vulnerabilities.
+
+        Args:
+            vulnerabilities (list): A list of file paths containing potential access control vulnerabilities.
+
+        Returns:
+            None
+        """
+        if vulnerabilities:
+            print("Access control vulnerabilities found:")
+            for vulnerability in vulnerabilities:
+                print(f"- {vulnerability}")
+        else:
+            print("No access control vulnerabilities found.")
