@@ -28,7 +28,6 @@ class CommandLineInterface:
         """
         Prints the banner when the CLI initializes.
         """
-        jwt_token="123"
         banner = """
 
 
@@ -73,6 +72,9 @@ World Serpant Search is CLI Tools for Vulnerability Detection
         access_control_parser = subparsers.add_parser("accesscontrol", help="Detect access control vulnerabilities")
         access_control_parser.add_argument('directory', help="Path to the directory to be scanned for access control vulnerabilities.")
 
+        sql_injection_parser = subparsers.add_parser("sqlinjection", help="Detect SQL injection vulnerabilities")
+        sql_injection_parser.add_argument('directory', help="Path to the directory to be scanned for SQL injection vulnerabilities.")
+
         args = parser.parse_args()
         if args.command == "scan":
             self.controller.scan_local_directory(args.directory)
@@ -88,6 +90,8 @@ World Serpant Search is CLI Tools for Vulnerability Detection
             self.controller.detect_insecure_deserialization(args.directory)
         elif args.command == "accesscontrol":
             self.controller.detect_access_control_vulnerabilities(args.directory)
+        elif args.command == "sqlinjection":
+            self.controller.detect_sql_injection(args.directory)
         else:
             print("Invalid command. Use 'serpant -h' for help.")
 

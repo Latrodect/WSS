@@ -5,7 +5,7 @@ with open('DESCRIPTION.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='serpant',
-    version='1.1.8',
+    version='1.2.0',
     description='A CLI tool for scanning directories for vulnerabilities',
     long_description=long_description,
     long_description_content_type='text/markdown',

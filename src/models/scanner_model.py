@@ -411,3 +411,36 @@ class LocalScanner:
             self.logger.log_error(f"Error processing file {file_path}: {str(e)}")
 
         return False
+    
+    def detect_sql_injection(self, directory_path):
+        """
+        Detect SQL injection vulnerabilities in code files within a directory.
+
+        Args:
+            directory_path (str): The path to the directory to be scanned.
+
+        Returns:
+            list: A list of dictionaries containing information about potential SQL injection vulnerabilities.
+                Each dictionary contains the following keys:
+                - "file_path": The path to the file containing the vulnerability.
+                - "line_number": The line number where the vulnerability was found.
+                - "vulnerability": A description of the potential SQL injection vulnerability.
+        """
+        sql_injection_files = []
+
+        sql_pattern = r'(\bselect\b|\bupdate\b|\bdelete\b|\binsert\b|\bdrop\b|\btruncate\b|\bunion\b|\bjoin\b|\bwhere\b|\bfrom\b|\border by\b|\bgroup by\b|\bexec\b|\bexecute\b|\bsp_executesql\b|\bdeclare\b|\bcreate\b|\balter\b|\bbackup\b|\brestore\b)'
+
+        for root, _, files in os.walk(directory_path):
+            for file_name in files:
+                file_path = os.path.join(root, file_name)
+                with open(file_path, 'r', encoding='utf-8') as file:
+                    for line_number, line in enumerate(file, 1):
+                        if re.search(sql_pattern, line, re.IGNORECASE):
+                            sql_injection_files.append({
+                                'file_path': file_path,
+                                'line_number': line_number,
+                                'vulnerability': 'Potential SQL injection detected'
+                            })
+                            break
+
+        return sql_injection_files

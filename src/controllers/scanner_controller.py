@@ -115,3 +115,17 @@ class ScannerController:
         self.logger.log_info(f"Starting access control vulnerability detection for directory: {directory_path}")
         access_control_vulnerabilities = self.scanner.detect_access_control_vulnerabilities(directory_path)
         return access_control_vulnerabilities
+    
+    def detect_sql_injection(self, directory_path):
+        """
+        Detect SQL injection vulnerabilities and display the results.
+
+        Args:
+            directory (str): The path to the directory to be scanned for SQL injection vulnerabilities.
+
+        Returns:
+            None
+        """
+        self.logger.log_info(f"Scanning directory for SQL injection vulnerabilities: {directory_path}")
+        vulnerabilities = self.scanner.detect_sql_injection(directory_path)
+        self.view.display_sql_injection_results(vulnerabilities)
