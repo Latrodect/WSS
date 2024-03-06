@@ -115,19 +115,19 @@ class ScannerView:
         else:
             print("No insecure deserialization vulnerabilities found.")
 
-    def display_access_control_vulnerabilities(self, vulnerabilities):
+    def display_sql_injection_results(self, vulnerabilities):
         """
-        Display information about access control vulnerabilities.
+        Display information about SQL injection vulnerabilities.
 
         Args:
-            vulnerabilities (list): A list of file paths containing potential access control vulnerabilities.
+            vulnerabilities (list): A list of file paths containing potential SQL injection vulnerabilities.
 
         Returns:
             None
         """
         if vulnerabilities:
-            print("Access control vulnerabilities found:")
+            print("SQL injection vulnerabilities found:")
             for vulnerability in vulnerabilities:
                 print(f"- {vulnerability}")
         else:
-            print("No access control vulnerabilities found.")
+            print("No SQL injection vulnerabilities found.")
