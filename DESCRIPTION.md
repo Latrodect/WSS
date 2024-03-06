@@ -11,36 +11,78 @@ World Serpant Search is a command-line tool for vulnerability detection. It allo
 To install World Serpant Search, you can use pip:
 
 ```bash
-pip install world-serpant-search
+pip install serpant
 ```
 
-## Usage
+## Usage and Examples
 
 To use the CLI, follow the instructions below:
 
 1. Install the CLI using pip:
 
    ```bash
-   pip install world-serpant-search
+   pip install serpant
    ```
+
 2. Run the CLI using the following command:
 
    ```bash
    serpant
    ```
+
 3. Use the available commands to perform vulnerability scans. For example:
 
    ```bash
    serpant scan /path/to/directory
    ```
 
-## Examples
+4. For scan local repo:
 
-Scan a local directory for vulnerabilities:
+   ```bash
+   serpant scan /path/to/directory
+   ```
 
-```bash
-serpant scan /path/to/directory
-```
+5. For SQL injection detection:
+
+   ```bash
+   serpant sqlinjection /path/to/directory
+   ```
+
+6. For search authentication bypass in local repo:
+
+   ```bash
+   serpant abypass /path/to/directory
+   ```
+
+6. For detect xss vulnerabilities repo:
+
+   ```bash
+   serpant xss /path/to/directory
+   ```
+
+7. For search vulnerabilities in national vulnerability databae:
+
+   ```bash
+   serpant nvd package name
+   ```
+
+8. For check sensitive data exposure in local repo:
+
+   ```bash
+   serpant sensetive /path/to/directory
+   ```
+
+9. For check unsecure deserialization:
+
+   ```bash
+   serpant deserialization /path/to/directory
+   ```
+
+10. For detect access control vulnerabilities:
+
+   ```bash
+   serpant accesscontrol /path/to/directory
+   ```
 
 # Model Logic Explanation
 
@@ -110,4 +152,3 @@ Develop checks to identify access control vulnerabilities, such as insecure dire
 ## License
 
 This project is licensed under the MIT License. See the LICENSE file for details.
-
