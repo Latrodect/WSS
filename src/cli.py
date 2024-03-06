@@ -30,21 +30,18 @@ class CommandLineInterface:
         """
         jwt_token="123"
         banner = """
-
-
-      ___           ___           ___           ___           ___           ___           ___     
-     /\  \         /\  \         /\  \         /\  \         /\  \         /\__\         /\  \    
-    /::\  \       /::\  \       /::\  \       /::\  \       /::\  \       /::|  |        \:\  \   
-   /:/\ \  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:|:|  |         \:\  \  
-  _\:\~\ \  \   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \   /::\~\:\  \   /:/|:|  |__       /::\  \ 
- /\ \:\ \ \__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/ |:| /\__\     /:/\:\__\\
- \:\ \:\ \/__/ \:\~\:\ \/__/ \/_|::\/:/  / \/__\:\/:/  / \/__\:\/:/  / \/__|:|/:/  /    /:/  \/__/
-  \:\ \:\__\    \:\ \:\__\      |:|::/  /       \::/  /       \::/  /      |:/:/  /    /:/  /     
-   \:\/:/  /     \:\ \/__/      |:|\/__/         \/__/        /:/  /       |::/  /     \/__/      
-    \::/  /       \:\__\        |:|  |                       /:/  /        /:/  /                 
-     \/__/         \/__/         \|__|                       \/__/         \/__/                  
-
-
+ .----------------.  .----------------.  .----------------.  .----------------.  .----------------.  .-----------------. .----------------. 
+| .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. || .--------------. |
+| |    _______   | || |  _________   | || |  _______     | || |   ______     | || |      __      | || | ____  _____  | || |  _________   | |
+| |   /  ___  |  | || | |_   ___  |  | || | |_   __ \    | || |  |_   __ \   | || |     /  \     | || ||_   \|_   _| | || | |  _   _  |  | |
+| |  |  (__ \_|  | || |   | |_  \_|  | || |   | |__) |   | || |    | |__) |  | || |    / /\ \    | || |  |   \ | |   | || | |_/ | | \_|  | |
+| |   '.___`-.   | || |   |  _|  _   | || |   |  __ /    | || |    |  ___/   | || |   / ____ \   | || |  | |\ \| |   | || |     | |      | |
+| |  |`\____) |  | || |  _| |___/ |  | || |  _| |  \ \_  | || |   _| |_      | || | _/ /    \ \_ | || | _| |_\   |_  | || |    _| |_     | |
+| |  |_______.'  | || | |_________|  | || | |____| |___| | || |  |_____|     | || ||____|  |____|| || ||_____|\____| | || |   |_____|    | |
+| |              | || |              | || |              | || |              | || |              | || |              | || |              | |
+| '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' || '--------------' |
+ '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------'  '----------------' 
+         
 World Serpant Search is CLI Tools for Vulnerability Detection                                 
         """
         cprint(banner, "light_magenta")
@@ -68,6 +65,9 @@ World Serpant Search is CLI Tools for Vulnerability Detection
         nvd_parser = subparsers.add_parser("nvd", help="Check package vulnerabilities using the National Vulnerability Database (NVD)")
         nvd_parser.add_argument('package', help="Name of the package to check for vulnerabilities.")
 
+        sensitive_parser = subparsers.add_parser("sensitive", help="Check for sensitive file exposure in a directory")
+        sensitive_parser.add_argument('directory', help="Path to the directory to be checked for sensitive file exposure.")
+
         args = parser.parse_args()
         if args.command == "scan":
             self.controller.scan_local_directory(args.directory)
@@ -77,6 +77,8 @@ World Serpant Search is CLI Tools for Vulnerability Detection
             self.controller.scan_authentication_bypass_directory(args.directory)
         elif args.command == "nvd":
             self.controller.scan_package_vulnerabilities_nvd(args.package)
+        elif args.command == "sensitive":
+            self.controller.scan_sensitive_files_exposure(args.directory)
         else:
             print("Invalid command. Use 'serpant -h' for help.")
 

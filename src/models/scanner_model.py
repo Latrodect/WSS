@@ -4,7 +4,7 @@ import re
 import requests
 from src.logger import Logger
 from src.utils.animations import Spinner
-
+import glob
 class LocalScanner:
     """
     A class to perform local directory scanning for vulnerabilities.
@@ -280,3 +280,21 @@ class LocalScanner:
             self.spinner.stop()  
 
         return vulnerabilities
+    
+    def scan_sensitive_files_exposure(self, directory_path):
+        """
+        Check for sensitive files (e.g., configuration files, log files) in the specified directory.
+
+        Args:
+            directory_path (str): The path to the directory to be scanned.
+
+        Returns:
+            list: A list of sensitive files found.
+        """
+        sensitive_file_patterns = ['*.conf', '*.log', '*.key']
+        sensitive_files = []
+
+        for pattern in sensitive_file_patterns:
+            sensitive_file_patterns.extend(glob.glob(os.path.join(directory_path, pattern)))
+        return sensitive_files
+
