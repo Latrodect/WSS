@@ -79,3 +79,14 @@ class ScannerController:
         self.logger.log_info(f"Starting package vulnerabilities control for: {package_name}")
         vulnerabilities = self.scanner.scan_package_vulnerabilities_nvd(package_name)
         self.view.display_package_vulnerabilities_nvd(vulnerabilities)
+
+    def scan_sensitive_files_exposure(self, directory_path):
+        """
+        Check for sensitive file exposure in the specified directory.
+
+        Args:
+            directory_path (str): The path to the directory to be scanned.
+        """
+        self.logger.log_info(f"Starting sensitive files exposure check for directory: {directory_path}")
+        sensitive_files = self.scanner.scan_sensitive_files_exposure(directory_path)
+        self.view.display_sensitive_files_exposure(sensitive_files)

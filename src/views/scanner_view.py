@@ -83,3 +83,17 @@ class ScannerView:
                 self.logger.log_warning(f"CVE ID: {cve_id}, Description: {description}, Last Modified Date:{last_modified_date}")
         else:
             self.logger.log_info("No vulnerabilities found.")
+
+    def display_sensitive_files_exposure(self, sensitive_files):
+        """
+        Display sensitive files exposed in the directory.
+
+        Args:
+            sensitive_files (list): A list of paths to sensitive files exposed in the directory.
+        """
+        if sensitive_files:
+            print("Sensitive files exposed:")
+            for file_path in sensitive_files:
+                print(file_path)
+        else:
+            print("No sensitive files exposed.")
