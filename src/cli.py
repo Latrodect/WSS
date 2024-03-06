@@ -71,6 +71,9 @@ World Serpant Search is CLI Tools for Vulnerability Detection
         deserialization_parser = subparsers.add_parser("deserialization", help="Detect insecure deserialization vulnerabilities")
         deserialization_parser.add_argument('directory', help="Path to the directory to be scanned for insecure deserialization vulnerabilities.")
 
+        access_control_parser = subparsers.add_parser("accesscontrol", help="Detect access control vulnerabilities")
+        access_control_parser.add_argument('directory', help="Path to the directory to be scanned for access control vulnerabilities.")
+
         args = parser.parse_args()
         if args.command == "scan":
             self.controller.scan_local_directory(args.directory)
@@ -84,6 +87,8 @@ World Serpant Search is CLI Tools for Vulnerability Detection
             self.controller.check_sensitive_files_exposure(args.directory)
         elif args.command == "deserialization":
             self.controller.detect_insecure_deserialization(args.directory)
+        elif args.command == "accesscontrol":
+            self.controller.detect_access_control_vulnerabilities(args.directory)
         else:
             print("Invalid command. Use 'serpant -h' for help.")
 

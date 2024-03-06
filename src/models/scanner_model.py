@@ -346,3 +346,60 @@ class LocalScanner:
 
         return False
 
+    def detect_access_control_vulnerabilities(self, directory_path):
+        """
+        Detect access control vulnerabilities in the codebase.
+
+        Args:
+            directory_path (str): Path to the directory to be scanned for access control vulnerabilities.
+
+        Returns:
+            list: A list of file paths containing potential access control vulnerabilities.
+        """
+        access_control_vulnerabilities = []
+
+        for root, _, files in os.walk(directory_path):
+            for file_name in files:
+                if not file_name.endswith('.pyc'): 
+                    file_path = os.path.join(root, file_name)
+                    if self._has_access_control_vulnerabilities(file_path):
+                        access_control_vulnerabilities.append(file_path)
+
+        return access_control_vulnerabilities
+    
+    def _has_access_control_vulnerabilities(self, file_path):
+        """
+        Check if a file contains indications of access control vulnerabilities.
+
+        Args:
+            file_path (str): Path to the file to be checked.
+
+        Returns:
+            bool: True if the file contains indications of access control vulnerabilities, False otherwise.
+        """
+        try:
+            with open(file_path, 'r', encoding='utf-8') as file:
+                content = file.read()
+
+            insecure_reference_pattern = re.compile(r'\b(admin_page|privileged_resource)\b')
+            insecure_method_call_pattern = re.compile(r'\bcheck_permissions\(\s*\)\s*;\s*$')
+
+            insecure_references = insecure_reference_pattern.findall(content)
+            insecure_method_calls = insecure_method_call_pattern.findall(content)
+
+            if insecure_references or insecure_method_calls:
+                self.logger.log_warning(f"Access control vulnerability detected in file: {file_path}")
+                if insecure_references:
+                    self.logger.log_warning("Insecure references found:")
+                    for reference in insecure_references:
+                        self.logger.log_warning(f"- {reference}")
+                if insecure_method_calls:
+                    self.logger.log_warning("Insecure method calls found:")
+                    for method_call in insecure_method_calls:
+                        self.logger.log_warning(f"- {method_call}")
+                return True  
+
+        except Exception as e:
+            self.logger.log_error(f"Error processing file {file_path}: {str(e)}")
+
+        return False

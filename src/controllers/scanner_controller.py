@@ -91,13 +91,27 @@ class ScannerController:
         sensitive_files = self.scanner.check_sensitive_files_exposure(directory_path)
         self.view.display_sensitive_files_exposure(sensitive_files)
 
-    def detect_insecure_deserialization(self,directory_path):
+    def detect_insecure_deserialization(self, directory_path):
         """
         Detect insecure deserialization vulnerabilities in the codebase.
 
         Args:
-            directory (str): Path to the directory to be scanned for insecure deserialization vulnerabilities.
+            directory_path (str): Path to the directory to be scanned for insecure deserialization vulnerabilities.
         """
-        self.logger.log_info(f"Starting sensitive files exposure check for directory: {directory_path}")
-        insecure_deserialization_vulnerabilities = self.model.detect_insecure_deserialization(directory_path)
+        self.logger.log_info(f"Starting insecure deserialization detection for directory: {directory_path}")
+        insecure_deserialization_vulnerabilities = self.scanner.detect_insecure_deserialization(directory_path)
         self.view.display_insecure_deserialization_vulnerabilities(insecure_deserialization_vulnerabilities)
+
+    def detect_access_control_vulnerabilities(self, directory_path):
+        """
+        Detect access control vulnerabilities in the codebase.
+
+        Args:
+            directory_path (str): Path to the directory to be scanned for access control vulnerabilities.
+
+        Returns:
+            list: A list of file paths containing potential access control vulnerabilities.
+        """
+        self.logger.log_info(f"Starting access control vulnerability detection for directory: {directory_path}")
+        access_control_vulnerabilities = self.scanner.detect_access_control_vulnerabilities(directory_path)
+        return access_control_vulnerabilities
