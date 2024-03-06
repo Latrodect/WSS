@@ -63,3 +63,23 @@ class ScannerView:
                 self.logger.log_warning("-" + vulnerability)
         else:
             self.logger.log_info("No potential authentication bypass vulnerabilities found.")
+
+    def display_package_vulnerabilities_nvd(self, vulnerabilities: list) -> None:
+        """
+        Display information about package vulnerabilities fetched from the National Vulnerability Database (NVD).
+
+        Args:
+            vulnerabilities (list): A list of dictionaries containing information about vulnerabilities.
+
+        Returns:
+            None
+        """
+        if vulnerabilities:
+            self.logger.log_warning("Potential vulnerabilities found:")
+            for vulnerability in vulnerabilities:
+                cve_id = vulnerability.get('CVE ID', 'N/A')
+                description = vulnerability.get('Description', 'N/A')
+                last_modified_date = vulnerability.get('Last Modified Date', 'N/A')
+                self.logger.log_warning(f"CVE ID: {cve_id}, Description: {description}, Last Modified Date:{last_modified_date}")
+        else:
+            self.logger.log_info("No vulnerabilities found.")

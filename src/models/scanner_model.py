@@ -1,7 +1,9 @@
 import os
 import json
 import re
+import requests
 from src.logger import Logger
+from src.utils.animations import Spinner
 
 class LocalScanner:
     """
@@ -16,6 +18,7 @@ class LocalScanner:
         Initializes the LocalScanner object.
         """
         self.logger = Logger()
+        self.spinner = Spinner()
     
     def _load_vulnerabilities(self, custom_json_file=None) -> list:
         """
@@ -86,7 +89,6 @@ class LocalScanner:
         try:
             for root, _, files in os.walk(directory_path):
                 for file_name in files:
-                    # This ignore will apply to all scan logics.
                     if not file_name.endswith(('.pyc')):
                         file_path = os.path.join(root, file_name)
                         with open(file_path, 'r', encoding='utf-8') as file:
@@ -168,19 +170,23 @@ class LocalScanner:
             r'is_valid_admin_session\s*=\s*True|False',  # Example: is_valid_admin_session=True
         ]
 
-        for root, _, files in os.walk(directory_path):
-            for file_name in files:
-                file_path = os.path.join(root, file_name)
-                vulnerabilities += self.scan_file_for_bypass(file_path, bypass_patterns)
+        try:
+            self.spinner.start()  
+            for root, _, files in os.walk(directory_path):
+                for file_name in files:
+                    file_path = os.path.join(root, file_name)
+                    vulnerabilities += self.scan_file_for_bypass(file_path, bypass_patterns)
+        finally:
+            self.spinner.stop() 
 
         return vulnerabilities
     
-    def scan_file_for_bypass(self, file_path, bypass_patters):
+    def scan_file_for_bypass(self, file_path, bypass_patterns):
         vulnerabilities = []
         try:
             with open(file_path, 'r', encoding='utf-8') as file:
                 for line_number, line in enumerate(file, start=1):
-                    for pattern in bypass_patters:
+                    for pattern in bypass_patterns:
                         if re.search(pattern, line):
                             vulnerability_info = {
                                 "file_path": file_path,
@@ -193,5 +199,84 @@ class LocalScanner:
 
         except Exception as e:
             self.logger.log_error(f"Error processing file '{file_path}': {e}")
+
+        return vulnerabilities
+    
+    @staticmethod
+    def format_nvd_response(response):
+        """
+        Format the response from the National Vulnerability Database (NVD) into a list of dictionaries containing information about vulnerabilities.
+
+        Args:
+            response (str): The JSON response string from the NVD API.
+
+        Returns:
+            list: A list of dictionaries containing formatted information about vulnerabilities. Each dictionary contains the following keys:
+                - 'CVE ID': The Common Vulnerabilities and Exposures (CVE) ID of the vulnerability.
+                - 'Published Date': The date when the vulnerability was published.
+                - 'Last Modified Date': The date when the vulnerability was last modified.
+                - 'Description': The description of the vulnerability.
+                    If no description is available, it defaults to 'N/A'.
+        """
+        formatted_results = []
+
+        data = json.loads(response)
+
+        vulnerabilities = data.get("vulnerabilities", [])
+
+        for vulnerability in vulnerabilities:
+            cve = vulnerability.get("cve", {})
+            cve_id = cve.get("id", "N/A")
+            published_date = cve.get("published", "N/A")
+            last_modified_date = cve.get("lastModified", "N/A")
+            
+            descriptions = cve.get("descriptions", [])
+            description = "N/A"
+            for desc in descriptions:
+                if 'value' in desc:
+                    description = desc['value']
+                    break
+
+            formatted_results.append({
+                "CVE ID": cve_id,
+                "Published Date": published_date,
+                "Last Modified Date": last_modified_date,
+                "Description": description
+            })
+
+        return formatted_results
+
+    def scan_package_vulnerabilities_nvd(self, package_name: str) -> list:
+        """
+        Check for known vulnerabilities in project dependencies using the National Vulnerability Database (NVD).
+
+        Args:
+            package_name (str): The name of the package to check for vulnerabilities.
+
+        Returns:
+            list: A list of dictionaries containing information about vulnerabilities.
+        """
+        vulnerabilities = []
+        nvd_api_url = f"https://services.nvd.nist.gov/rest/json/cves/2.0?keywordSearch={package_name}"
+
+        try:
+            self.spinner.start()  
+            response = requests.get(nvd_api_url)
+            if response.status_code == 200:
+                
+                formatted_results = self.format_nvd_response(response.text)
+                if formatted_results:
+                    vulnerabilities.extend(formatted_results)
+                else:
+                    self.logger.log_info("No vulnerabilities found.")
+            else:
+                
+                self.logger.log_error(f"Failed to fetch data from NVD API. Status code: {response.status_code}")
+
+        except Exception as e:
+            
+            self.logger.log_error(f"An error occurred while fetching data from NVD API: {e}")
+        finally:
+            self.spinner.stop()  
 
         return vulnerabilities
