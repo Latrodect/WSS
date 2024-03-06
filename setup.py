@@ -1,10 +1,14 @@
 from setuptools import setup, find_packages
 
+with open('README.md', 'r', encoding='utf-8') as f:
+    long_description = f.read()
+
 setup(
     name='serpant',
-    version='1.1.0',
+    version='1.1.2',
     description='A CLI tool for scanning directories for vulnerabilities',
-    long_description='A CLI tool for scanning directories for vulnerabilities such as hardcoded passwords, exposed API keys, etc.',
+    long_description=long_description,
+    long_description_content_type='text/markdown',
     author='Bahadir Nural',
     author_email='bahadir.nural@outlook.com',
     url='https://github.com/Latrodect/wss-repo-vulnerability-finder',
