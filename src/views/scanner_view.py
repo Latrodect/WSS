@@ -98,5 +98,16 @@ class ScannerView:
         else:
             print("No sensitive files exposed.")
 
-    def display_insecure_deserialization_vulnerabilities(self):
-        pass
+    def display_insecure_deserialization_vulnerabilities(self, insecure_deserialization_vulnerabilities):
+        """
+        Display insecure deserialization vulnerabilities detected in the codebase.
+
+        Args:
+            insecure_deserialization_vulnerabilities (list): A list of paths to files containing insecure deserialization vulnerabilities.
+        """
+        if insecure_deserialization_vulnerabilities:
+            print("Insecure deserialization vulnerabilities found:")
+            for file_path in insecure_deserialization_vulnerabilities:
+                print(file_path)
+        else:
+            print("No insecure deserialization vulnerabilities found.")
