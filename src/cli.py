@@ -65,6 +65,9 @@ World Serpant Search is CLI Tools for Vulnerability Detection
         abypass_parser = subparsers.add_parser("abypass", help="Scan a directory for authentication bypass vulnerabilities")
         abypass_parser.add_argument('directory', help="Path to the directory to be scanned for authentication bypass vulnerabilities.")
 
+        nvd_parser = subparsers.add_parser("nvd", help="Check package vulnerabilities using the National Vulnerability Database (NVD)")
+        nvd_parser.add_argument('package', help="Name of the package to check for vulnerabilities.")
+
         args = parser.parse_args()
         if args.command == "scan":
             self.controller.scan_local_directory(args.directory)
@@ -72,6 +75,8 @@ World Serpant Search is CLI Tools for Vulnerability Detection
             self.controller.scan_xss_directory(args.directory)
         elif args.command == "abypass":
             self.controller.scan_authentication_bypass_directory(args.directory)
+        elif args.command == "nvd":
+            self.controller.scan_package_vulnerabilities_nvd(args.package)
         else:
             print("Invalid command. Use 'serpant -h' for help.")
 

@@ -1,6 +1,7 @@
 from src.views.scanner_view import ScannerView
 from src.models.scanner_model import LocalScanner
 from src.logger import Logger
+
 class ScannerController:
     """
     A class to control scanning operations.
@@ -64,3 +65,17 @@ class ScannerController:
         self.logger.log_info(f"Starting Authenticaiton Bypass scan in directory: {directory_path}")
         vulnerabilities = self.scanner.scan_authentication_bypass_directory(directory_path)
         self.view.display_authentication_bypass_scan_results(vulnerabilities)
+
+    def scan_package_vulnerabilities_nvd(self, package_name: str) -> None:
+        """
+        Check for known vulnerabilities in a package using the National Vulnerability Database (NVD).
+
+        Args:
+            package_name (str): The name of the package to check for vulnerabilities.
+
+        Returns:
+            None
+        """
+        self.logger.log_info(f"Starting package vulnerabilities control for: {package_name}")
+        vulnerabilities = self.scanner.scan_package_vulnerabilities_nvd(package_name)
+        self.view.display_package_vulnerabilities_nvd(vulnerabilities)

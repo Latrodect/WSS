@@ -71,7 +71,7 @@ class Logger:
         Args:
             message (str): The warning message to be logged.
         """
-        self.logger.warning(message)
+        self.logger.warning(message, extra={'log_level': 'WARNING'})
 
     def log_error(self, message):
         """
@@ -80,4 +80,4 @@ class Logger:
         Args:
             message (str): The error message to be logged.
         """
-        self.logger.error(message)
+        self.logger.error(message, extra={'log_level': 'ERROR'})
