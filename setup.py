@@ -5,7 +5,7 @@ with open('DESCRIPTION.md', 'r', encoding='utf-8') as f:
 
 setup(
     name='serpant',
-    version='1.2.0',
+    version='1.2.2',
     description='A CLI tool for scanning directories for vulnerabilities',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -24,6 +24,8 @@ setup(
             'serpant=src.cli:main',
         ],
     },
+    package_data={'src.models': ['vulnerabilities.json']},
+    include_package_data=True,
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

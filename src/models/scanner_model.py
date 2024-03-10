@@ -80,23 +80,24 @@ class LocalScanner:
         """
         xss_vulnerabilities = []
         xss_pattern = re.compile(r'<\s*script[^>]*>.*?<\s*/\s*script\s*>', re.IGNORECASE)
-        
+
         try:
             for root, _, files in os.walk(directory_path):
                 for file_name in files:
-                    if not file_name.endswith(('.pyc')):
+                    if file_name.endswith(('.html', '.htm', '.js')):
                         file_path = os.path.join(root, file_name)
                         with open(file_path, 'r', encoding='utf-8') as file:
-                            for line_number, line in enumerate(file, start=1):
-                                if xss_pattern.search(line):
-                                    xss_vulnerabilities.append(f"Potential XSS vulnerability found in file '{file_path}' at line {line_number}")
+                            content = file.read()
+                            decoded_content = html.unescape(content)
+                            if xss_pattern.search(decoded_content):
+                                xss_vulnerabilities.append(f"Potential XSS vulnerability found in file '{file_path}'")
         except UnicodeDecodeError as e:
             self.logger.log_error(f"Error decoding file '{directory_path}': {e}")
         except FileNotFoundError:
             self.logger.log_error(f"File not found: '{directory_path}'")
         except Exception as e:
             self.logger.log_error(f"Error processing file '{directory_path}': {e}")
-        
+
         return xss_vulnerabilities
 
     def scan_authentication_bypass_directory(self, directory_path):
@@ -198,15 +199,15 @@ class LocalScanner:
             with open(file_path, 'r', encoding='utf-8') as file:
                 for line_number, line in enumerate(file, start=1):
                     for pattern in bypass_patterns:
-                        if re.search(pattern, line):
+                        matches = re.findall(pattern, line)
+                        for match in matches:
                             vulnerabilities.append({
                                 "file_path": file_path,
                                 "line_number": line_number,
-                                "vulnerability": f"Potential authentication bypass pattern: {pattern}"
+                                "vulnerability": f"Potential authentication bypass: {match}"
                             })
-                            break
         except Exception as e:
-            self.logger.log_error(f"Error reading file '{file_path}': {str(e)}")
+            self.logger.log_error(f"Error scanning file {file_path}: {str(e)}")
 
         return vulnerabilities
     
